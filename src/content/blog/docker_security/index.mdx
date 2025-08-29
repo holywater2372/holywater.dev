@@ -6,7 +6,7 @@ tags: ['Docker','Ansible','Container Security']
 image: './docker1.svg'
 authors: ['holywater']
 ---
-
+import Callout from '@/components/Callout.astro'
 
 This blog is part of my best practices for deploying an application in a containerized environment, taking into consideration the various security measures that have been implemented for seamless integration. I might further explain the impact of [Ansible playbooks](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html) used for automation of deployment of containers.  
 
@@ -25,9 +25,12 @@ This blog is part of my best practices for deploying an application in a contain
 - Let’s take different Linux distros, such as Ubuntu (based on Debian) and Red Hat. While these may have different software and packages, they all use the same kernel. Distros are like humans: they may vary a lot on the outside but contain the same kernel inside (like human body parts).
 - Docker essentially uses this concept, using the kernel of the host system and installs multiple containers or instances over it. With Docker, one can have a single Linux host and install multiple Linux containers or instances over it.
 
-> **Quick Note**: Now that we understand Docker uses the kernel of the host system, it’s important to note that Linux containers cannot be directly installed on a Windows machine or vice-versa. This is because the kernel in a Windows system is different from the Linux kernel. 
-> Docker relies on the underlying host's kernel to run containers, and since the Windows kernel is not compatible with Linux-specific system calls and functionalities, you cannot run Linux containers natively on Windows. However, there are workarounds, such as using `Windows Subsystem for Linux (WSL)` to enable the running of Linux containers on a Windows host.
-
+<Callout variant="important">
+Now that we understand Docker uses the kernel of the host system, it’s important to note that Linux containers cannot be directly installed on a Windows machine or vice-versa. This is because the kernel in a Windows system is different from the Linux kernel. 
+  <Callout>
+    Docker relies on the underlying host's kernel to run containers, and since the Windows kernel is not compatible with Linux-specific system calls and functionalities, you cannot run Linux containers natively on Windows. However, there are workarounds, such as using `Windows Subsystem for Linux (WSL)` to enable the running of Linux containers on a Windows host
+  </Callout>
+</Callout>
 
  The following are some basic components of Docker:
 - **`Images`**: Executable code built in layers. A read only template or recipe for a container and can't be modified.
