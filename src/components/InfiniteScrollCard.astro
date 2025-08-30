@@ -1,34 +1,40 @@
 ---
 const badges = [
   {
-    name: 'Rider',
-    src: '/badge/badge1.png',
-    alt: 'JetBrains Rider',
-    href: 'https://www.jetbrains.com/rider/',
+    name: 'OSEP',
+    src: '/badge/OSEP.svg',
+    alt: 'OSEP',
+    href: 'https://credentials.offsec.com/fc0a3329-f743-4ee5-aa40-70bd2bbb7995#acc.z6pHyCXc',
   },
   {
-    name: 'Bug Urking',
-    src: '/badge/badge2.png',
-    alt: 'Bug Urking',
+    name: 'BSCP',
+    src: '/badge/BSCP.png',
+    alt: 'BSCP',
+    href: 'https://portswigger.net/web-security/e/c/425867b14072d723',
+  },
+  {
+    name: 'CPTS',
+    src: '/badge/CPTS.png',
+    alt: 'CPTS',
+    href: 'https://www.credly.com/badges/f524d913-3a37-4a9f-9d3a-0cdb917a1656',
+  },
+  {
+    name: 'PNPT',
+    src: '/badge/PNPT.webp',
+    alt: 'PNPT',
+    href: 'https://www.credential.net/848f4ecb-d9fc-430a-8417-9fbcc21db3b4#acc.U51b3aXl',
+  },
+  {
+    name: 'CRTO',
+    src: '/badge/CRTO.png',
+    alt: 'CRTO',
+    href: 'https://eu.badgr.com/public/assertions/568rOeA4TsOpAsRuSwbGkA',
+  },
+  {
+    name: 'CAP',
+    src: '/badge/CAP.png',
+    alt: 'CAP',
     href: '#',
-  },
-  {
-    name: 'Spotify',
-    src: '/badge/badge3.png',
-    alt: 'Spotify',
-    href: 'https://www.spotify.com/',
-  },
-  {
-    name: 'Steam',
-    src: '/badge/badge4.png',
-    alt: 'Steam',
-    href: 'https://store.steampowered.com/',
-  },
-  {
-    name: 'Apple',
-    src: '/badge/badge5.png',
-    alt: 'Apple',
-    href: 'https://www.apple.com/',
   },
 ]
 
@@ -88,8 +94,8 @@ const repeatedBadges = [...badges, ...badges, ...badges, ...badges]
 
   .infinite-scroll-track {
     display: flex;
-    gap: 2rem;
-    animation: scroll 15s linear infinite;
+    gap: 3rem;
+    animation: scroll 20s linear infinite;
     width: max-content;
     align-items: center;
   }
@@ -103,7 +109,7 @@ const repeatedBadges = [...badges, ...badges, ...badges, ...badges]
     flex-direction: column;
     align-items: center;
     min-width: 120px;
-    opacity: 0.8;
+    opacity: 1;
     transition: all 0.3s ease;
     padding: 0.5rem;
   }
@@ -114,8 +120,8 @@ const repeatedBadges = [...badges, ...badges, ...badges, ...badges]
   }
 
   .badge-image {
-    width: 64px;
-    height: 64px;
+    width: 100px;
+    height: 100x;
     object-fit: contain;
     border-radius: 8px;
     transition: all 0.3s ease;

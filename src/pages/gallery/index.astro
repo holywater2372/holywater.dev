@@ -2,16 +2,19 @@
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
 import PageHead from '@/components/PageHead.astro'
 import Layout from '@/layouts/Layout.astro'
-// 최신 Astro에서는 Astro.glob 대신 import.meta.glob 사용
+// 최신 Astro에서는 Astro.glob 대신 import.meta.glob 사용\
+// In the latest Astro, use import.meta.glob instead of Astro.glob
 const imported = import.meta.glob(
   '../../content/gallery/*.{jpg,jpeg,png,webp,avif,gif}',
   {
     eager: true,
-    as: 'url',
+    query: '?url',
+    import: 'default',
   },
-) as Record<string, string>
+) as Record<string, string>;
 
 // 파일명 기준 정렬 후 URL 리스트로 변환
+// Convert to a list of URLs after sorting by file name
 const images = Object.entries(imported)
   .sort((a, b) => a[0].localeCompare(b[0]))
   .map(([, url]) => url)

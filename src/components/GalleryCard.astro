@@ -3,9 +3,10 @@ const imported = import.meta.glob(
   '../content/gallery/*.{jpg,jpeg,png,webp,avif,gif}',
   {
     eager: true,
-    as: 'url',
+    query: '?url',
+    import: 'default',
   },
-) as Record<string, string>
+) as Record<string, string>;
 
 const entries = Object.entries(imported)
 const images = entries.map(([, url]) => url)
