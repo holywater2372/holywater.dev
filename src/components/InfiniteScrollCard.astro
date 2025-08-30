@@ -1,0 +1,208 @@
+---
+const badges = [
+  {
+    name: 'Rider',
+    src: '/badge/badge1.png',
+    alt: 'JetBrains Rider',
+    href: 'https://www.jetbrains.com/rider/',
+  },
+  {
+    name: 'Bug Urking',
+    src: '/badge/badge2.png',
+    alt: 'Bug Urking',
+    href: '#',
+  },
+  {
+    name: 'Spotify',
+    src: '/badge/badge3.png',
+    alt: 'Spotify',
+    href: 'https://www.spotify.com/',
+  },
+  {
+    name: 'Steam',
+    src: '/badge/badge4.png',
+    alt: 'Steam',
+    href: 'https://store.steampowered.com/',
+  },
+  {
+    name: 'Apple',
+    src: '/badge/badge5.png',
+    alt: 'Apple',
+    href: 'https://www.apple.com/',
+  },
+]
+
+const repeatedBadges = [...badges, ...badges, ...badges, ...badges]
+---
+
+<div class="bg-card text-card-foreground overflow-hidden rounded-lg border">
+  <div class="p-16">
+    <div class="infinite-scroll-container">
+      <div class="infinite-scroll-track">
+        {
+          repeatedBadges.map((badge) => (
+            <div class="badge-item">
+              <a
+                href={badge.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="badge-link"
+                aria-label={badge.name}
+              >
+                <img
+                  src={badge.src}
+                  alt={badge.alt}
+                  class="badge-image"
+                  loading="lazy"
+                />
+              </a>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .infinite-scroll-container {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    padding: 1rem 0;
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 10%,
+      black 90%,
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 10%,
+      black 90%,
+      transparent 100%
+    );
+  }
+
+  .infinite-scroll-track {
+    display: flex;
+    gap: 2rem;
+    animation: scroll 15s linear infinite;
+    width: max-content;
+    align-items: center;
+  }
+
+  .infinite-scroll-track:hover {
+    animation-play-state: paused;
+  }
+
+  .badge-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 120px;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+    padding: 0.5rem;
+  }
+
+  .badge-item:hover {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+
+  .badge-image {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(calc(-100% / 4));
+    }
+  }
+
+  /* Tablet */
+  @media (max-width: 1023px) {
+    .infinite-scroll-track {
+      gap: 1.5rem;
+      animation-duration: 25s;
+    }
+
+    .badge-item {
+      min-width: 100px;
+    }
+
+    .badge-image {
+      width: 56px;
+      height: 56px;
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 767px) {
+    .infinite-scroll-container {
+      padding: 0.75rem 1rem;
+    }
+
+    .infinite-scroll-track {
+      gap: 1rem;
+      animation-duration: 20s;
+    }
+
+    .badge-item {
+      min-width: 80px;
+      padding: 0.4rem;
+    }
+
+    .badge-image {
+      width: 48px;
+      height: 48px;
+    }
+
+    .badge-item:hover {
+      transform: scale(1.08);
+    }
+  }
+
+  /* Small Mobile */
+  @media (max-width: 480px) {
+    .infinite-scroll-track {
+      gap: 0.75rem;
+      animation-duration: 18s;
+    }
+
+    .badge-item {
+      min-width: 70px;
+      padding: 0.3rem;
+    }
+
+    .badge-image {
+      width: 40px;
+      height: 40px;
+    }
+
+    .badge-item:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  /* Accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    .infinite-scroll-track {
+      animation-duration: 60s;
+    }
+
+    .badge-item:hover {
+      transform: none;
+    }
+  }
+</style>
