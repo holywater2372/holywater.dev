@@ -1,0 +1,37 @@
+---
+const imported = import.meta.glob(
+  '../content/gallery/*.{jpg,jpeg,png,webp,avif,gif}',
+  {
+    eager: true,
+    as: 'url',
+  },
+) as Record<string, string>
+
+const entries = Object.entries(imported)
+const images = entries.map(([, url]) => url)
+const randomIndex =
+  images.length > 0 ? Math.floor(Math.random() * images.length) : -1
+const randomImage = randomIndex >= 0 ? images[randomIndex] : undefined
+const randomKey = randomIndex >= 0 ? entries[randomIndex][0] : ''
+const alt = randomKey
+  ? (randomKey
+      .split('/')
+      .pop()
+      ?.replace(/\.[^/.]+$/, '')
+      ?.replace(/[-_]+/g, ' ') ?? '')
+  : ''
+---
+
+<div class="relative h-48 overflow-hidden rounded-lg border md:h-96">
+  {
+    randomImage && (
+      <img
+        src={randomImage}
+        alt={alt}
+        loading="lazy"
+        decoding="async"
+        class="block h-full w-full object-cover"
+      />
+    )
+  }
+</div>
