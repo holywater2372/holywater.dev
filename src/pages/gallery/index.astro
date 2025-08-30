@@ -1,0 +1,85 @@
+---
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import PageHead from '@/components/PageHead.astro'
+import Layout from '@/layouts/Layout.astro'
+// 최신 Astro에서는 Astro.glob 대신 import.meta.glob 사용
+const imported = import.meta.glob(
+  '../../content/gallery/*.{jpg,jpeg,png,webp,avif,gif}',
+  {
+    eager: true,
+    as: 'url',
+  },
+) as Record<string, string>
+
+// 파일명 기준 정렬 후 URL 리스트로 변환
+const images = Object.entries(imported)
+  .sort((a, b) => a[0].localeCompare(b[0]))
+  .map(([, url]) => url)
+---
+
+<Layout class="max-w-3xl">
+  <PageHead slot="head" title="Gallery" />
+  <Breadcrumbs items={[{ label: 'Gallery', icon: 'lucide:images' }]} />
+  <section aria-label="Masonry Gallery" class="gallery-wrapper">
+    <div class="masonry">
+      {
+        images.map((src) => (
+          <div class="masonry-item">
+            <img src={src} alt="" loading="lazy" decoding="async" />
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .gallery-wrapper {
+    padding: 1rem;
+    margin: 0 auto;
+    max-width: 1200px;
+  }
+
+  .masonry {
+    column-gap: 1rem;
+  }
+
+  /* 기본 1열 */
+  .masonry {
+    column-count: 1;
+  }
+
+  /* >= 640px */
+  @media (min-width: 640px) {
+    .masonry {
+      column-count: 2;
+    }
+  }
+
+  /* >= 1024px */
+  @media (min-width: 1024px) {
+    .masonry {
+      column-count: 3;
+    }
+  }
+
+  /* >= 1280px */
+  @media (min-width: 1280px) {
+    .masonry {
+      column-count: 4;
+    }
+  }
+
+  .masonry-item {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+  }
+
+  .masonry-item img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    background: #111;
+  }
+</style>
