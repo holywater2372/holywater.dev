@@ -1,5 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components'
+import Link from '@/components/Link.astro'
 ---
 
 <div class="bg-card text-card-foreground h-full rounded-lg border p-6">
@@ -7,20 +8,32 @@ import { Icon } from 'astro-icon/components'
     <div class="mb-4 space-y-2">
       <h1 class="text-foreground text-3xl font-bold">Intro!</h1>
       <p class="text-muted-foreground text-sm leading-relaxed">
-        Hey everyone! I'm holywater and I like to learn anything and everything that interests me includes computing, cyber, dev and what not.
+        Hey everyone! I'm Nazeef Khan, I like to learn anything and everything that interests me includes computing, cyber, dev....
       </p>
       <p class="text-muted-foreground text-sm leading-relaxed">
-        Strawberry Latte is god. I love it. This is really good. I want to drink
-        it. Is Strawberry Latte good?
+        Living life playing chess and coping up with my imposter syndrome.
       </p>
       
-      <p
-        class="text-muted-foreground flex items-center gap-2 text-sm leading-relaxed"
-      >
-        I'm curre
-        <Icon name="lucide:sparkles" class="size-4 text-yellow-500" />
-      </p>
-      
+      <p class="text-[12px] text-muted-foreground">
+      This blog was made possible with the help of
+      <Link
+              href="https://github.com/snow0406"
+              class="text-foreground"
+              underline
+              external>hyukii</Link
+            >.
+       and using enscribe's 
+      <Link
+              href="https://github.com/jktrn/astro-erudite"
+              class="text-foreground"
+              underline
+              external>astro-erudite</Link
+            >template. Go check them out!
+
+
+<Icon name="lucide:sparkles" class="size-4 text-yellow-500" />
+</p>
+
     </div>
   </div>
 </div>
