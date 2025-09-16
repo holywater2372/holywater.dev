@@ -12,7 +12,8 @@ import rehypeKatex from 'rehype-katex'
 import rehypePrettyCode from 'rehype-pretty-code'
 import remarkEmoji from 'remark-emoji'
 import remarkMath from 'remark-math'
-import rehypeDocument from 'rehype-document'
+import remarkSectionize from 'remark-sectionize'
+import remarkToc from 'remark-toc'
 
 import { pluginCollapsibleSections } from '@expressive-code/plugin-collapsible-sections'
 import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
@@ -26,7 +27,7 @@ export default defineConfig({
       themes: ['github-light', 'github-dark'],
       plugins: [pluginCollapsibleSections(), pluginLineNumbers()],
       useDarkModeMediaQuery: false,
-      themeCssSelector: (theme) => `[data-theme="${theme.name.split('-')[1]}"]`,
+      themeCssSelector: (theme) => `.${theme.name.split('-')[1]}`,
       defaultProps: {
         wrap: true,
         collapseStyle: 'collapsible-auto',
@@ -38,7 +39,6 @@ export default defineConfig({
         },
       },
       styleOverrides: {
-        codeFontSize: '0.75rem',
         borderColor: 'var(--border)',
         codeFontFamily: 'var(--font-mono)',
         codeBackground:
@@ -49,7 +49,6 @@ export default defineConfig({
             'color-mix(in oklab, var(--secondary) 25%, transparent)',
           editorActiveTabIndicatorBottomColor: 'transparent',
           editorActiveTabIndicatorTopColor: 'transparent',
-          editorTabBorderRadius: '0',
           editorTabBarBackground: 'transparent',
           editorTabBarBorderBottomColor: 'transparent',
           frameBoxShadowCssValue: 'none',
@@ -84,12 +83,6 @@ export default defineConfig({
     syntaxHighlight: false,
     rehypePlugins: [
       [
-        rehypeDocument,
-        {
-          css: 'https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css',
-        },
-      ],
-      [
         rehypeExternalLinks,
         {
           target: '_blank',
@@ -108,6 +101,6 @@ export default defineConfig({
         },
       ],
     ],
-    remarkPlugins: [remarkMath, remarkEmoji],
+    remarkPlugins: [remarkToc, remarkMath, remarkEmoji, remarkSectionize],
   },
 })

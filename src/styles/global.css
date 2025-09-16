@@ -1,6 +1,7 @@
+@import 'https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';
 @import 'tailwindcss';
 
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --font-sans:
@@ -67,7 +68,7 @@
   --ring: oklch(0.708 0 0);
 }
 
-[data-theme='dark'] {
+.dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --primary: oklch(0.922 0 0);
@@ -90,5 +91,21 @@
   ::backdrop,
   ::file-selector-button {
     @apply border-border outline-ring/50 tracking-tight;
+  }
+
+  html {
+    @apply bg-background text-foreground scheme-light;
+
+    &.dark {
+      @apply scheme-dark;
+    }
+
+    ::-webkit-scrollbar-corner {
+      @apply bg-transparent;
+    }
+  }
+
+  .disable-transitions * {
+    @apply transition-none!;
   }
 }

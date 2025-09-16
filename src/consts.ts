@@ -1,28 +1,23 @@
 import type { IconMap, SocialLink, Site } from '@/types'
 
 export const SITE: Site = {
-  title: 'holywater.dev',
-  description:
-    'holywater.dev is a blog built with Astro, Tailwind, and shadcn/ui.',
-  href: 'https://holywater.dev',
-  author: 'holywater',
+  title: 'astro-erudite',
   locale: 'en-US',
+  description:
+    'astro-erudite is a opinionated, unstyled blogging template—built with Astro, Tailwind, and shadcn/ui.',
+  href: 'https://astro-erudite.vercel.app',
   featuredPostCount: 2,
   postsPerPage: 3,
 }
 
 export const NAV_LINKS: SocialLink[] = [
   {
-    href: '/',
-    label: 'home',
-  },
-  {
     href: '/blog',
     label: 'blog',
   },
   {
-    href: '/gallery',
-    label: 'gallery',
+    href: '/authors',
+    label: 'authors',
   },
   {
     href: '/about',
@@ -32,19 +27,15 @@ export const NAV_LINKS: SocialLink[] = [
 
 export const SOCIAL_LINKS: SocialLink[] = [
   {
-    href: 'https://www.linkedin.com/in/dummy-account-485059181/',
-    label: 'LinkedIn',
-  },
-  {
-    href: 'https://github.com/holywater2372',
+    href: 'https://github.com/jktrn',
     label: 'GitHub',
   },
   {
-    href: 'https://discordapp.com/users/593390384785391637',
-    label: 'Discord',
+    href: 'https://twitter.com/enscry',
+    label: 'Twitter',
   },
   {
-    href: 'mailto:h0lywat3rr@gmail.com',
+    href: 'mailto:jason@enscribe.dev',
     label: 'Email',
   },
   {
@@ -57,8 +48,7 @@ export const ICON_MAP: IconMap = {
   Website: 'lucide:globe',
   GitHub: 'lucide:github',
   LinkedIn: 'lucide:linkedin',
-  Twitter: 'lucide:x',
+  Twitter: 'lucide:twitter',
   Email: 'lucide:mail',
   RSS: 'lucide:rss',
-  Discord: 'simple-icons:discord',
 }

@@ -2,13 +2,8 @@
 import AvatarComponent from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import {
-  getCombinedReadingTime,
-  getSubpostCount,
-  isSubpost,
-  parseAuthors,
-} from '@/lib/data-utils'
-import { formatDate } from '@/lib/utils'
+import { parseAuthors } from '@/lib/data-utils'
+import { formatDate, readingTime } from '@/lib/utils'
 import { Icon } from 'astro-icon/components'
 import { Image } from 'astro:assets'
 import type { CollectionEntry } from 'astro:content'
@@ -20,9 +15,8 @@ interface Props {
 
 const { entry } = Astro.props
 const formattedDate = formatDate(entry.data.date)
-const readTime = await getCombinedReadingTime(entry.id)
+const readTime = readingTime(entry.body!)
 const authors = await parseAuthors(entry.data.authors ?? [])
-const subpostCount = !isSubpost(entry.id) ? await getSubpostCount(entry.id) : 0
 ---
 
 <div
@@ -75,17 +69,6 @@ const subpostCount = !isSubpost(entry.id) ? await getSubpostCount(entry.id) : 0
         <span>{formattedDate}</span>
         <Separator orientation="vertical" className="h-4!" />
         <span>{readTime}</span>
-        {
-          subpostCount > 0 && (
-            <>
-              <Separator orientation="vertical" className="h-4!" />
-              <span class="flex items-center gap-1">
-                <Icon name="lucide:file-text" class="size-3" />
-                {subpostCount} subpost{subpostCount === 1 ? '' : 's'}
-              </span>
-            </>
-          )
-        }
       </div>
 
       {
