@@ -81,17 +81,21 @@ const TextType = ({
   }, [startOnVisible]);
 
   useEffect(() => {
-    if (showCursor && cursorRef.current && !finished) {
-      gsap.set(cursorRef.current, { opacity: 1 });
-      gsap.to(cursorRef.current, {
-        opacity: 0,
-        duration: cursorBlinkDuration,
-        repeat: -1,
-        yoyo: true,
-        ease: 'power2.inOut'
-      });
-    } else if (finished && cursorRef.current) {
-      gsap.to(cursorRef.current, { opacity: 1, duration: 0 });
+    if (showCursor && cursorRef.current) {
+      if (finished) {
+        // Keep cursor visible and solid when typing is finished
+        gsap.to(cursorRef.current, { opacity: 1, duration: 0 });
+      } else {
+        // Start blinking animation when typing is in progress
+        gsap.set(cursorRef.current, { opacity: 1 });
+        gsap.to(cursorRef.current, {
+          opacity: 0,
+          duration: cursorBlinkDuration,
+          repeat: -1,
+          yoyo: true,
+          ease: 'power2.inOut'
+        });
+      }
     }
   }, [showCursor, cursorBlinkDuration, finished]);
 
@@ -175,7 +179,7 @@ const TextType = ({
     <span className="text-type__content" style={{ color: getCurrentTextColor() }}>
       {displayedText}
     </span>,
-    showCursor && !finished && (
+    showCursor && (
       <span
         ref={cursorRef}
         className={`text-type__cursor ${cursorClassName}`}

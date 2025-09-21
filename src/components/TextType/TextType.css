@@ -6,9 +6,10 @@
 }
 
 .text-type__cursor {
-  margin-left: 0.25rem;
+  margin-left: 0;
   display: inline-block;
   opacity: 1;
+  color: #00ff00;
 }
 
 .text-type__cursor--hidden {
