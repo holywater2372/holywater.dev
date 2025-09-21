@@ -1,20 +1,25 @@
 ---
 import { Icon } from 'astro-icon/components'
 import Link from '@/components/Link.astro'
+import TextType from '@/components/TextType/TextType.tsx'
 ---
 
 <div class="bg-card text-card-foreground h-full rounded-lg border p-6">
   <div class="flex h-full flex-col">
     <div class="mb-4 space-y-2">
       <h1 class="text-foreground text-3xl font-bold">Intro!</h1>
-      <p class="text-muted-foreground text-sm leading-relaxed">
-        Hey everyone! I'm Nazeef Khan, I like to learn anything and everything that interests me includes computing, cyber, dev....
-      </p>
-      <p class="text-muted-foreground text-sm leading-relaxed">
-        Living life playing chess and coping up with my imposter syndrome.
-      </p>
       
-      <p class="text-[12px] text-muted-foreground">
+      <div class="text-muted-foreground text-sm leading-relaxed">
+        <TextType
+          text={[
+            "Hey everyone! I'm Nazeef Khan, I like to learn anything and everything that interests me includes computing, cyber, dev....",
+            "Living life playing chess and coping up with my imposter syndrome.",
+          ]}
+          loop={false}
+          client:visible
+        />
+
+        <p class="text-[12px] text-muted-foreground">
       This blog was made possible with the help of
       <Link
               href="https://github.com/snow0406"
@@ -29,11 +34,11 @@ import Link from '@/components/Link.astro'
               underline
               external>astro-erudite</Link
             >template. Go check them out!
+        <p class="mt-4">
+          <Icon name="lucide:sparkles" class="size-4 text-yellow-500" />
+        </p>
 
-
-<Icon name="lucide:sparkles" class="size-4 text-yellow-500" />
-</p>
-
+      </div>
     </div>
   </div>
 </div>
