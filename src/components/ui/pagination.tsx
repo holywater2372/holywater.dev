@@ -129,8 +129,6 @@ const PaginationComponent: React.FC<PaginationProps> = ({
   totalPages,
   baseUrl,
 }) => {
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1)
-
   const getPageUrl = (page: number) => {
     if (page === 1) return baseUrl
     return `${baseUrl}${page}`
@@ -146,22 +144,49 @@ const PaginationComponent: React.FC<PaginationProps> = ({
           />
         </PaginationItem>
 
-        {pages.map((page) => (
-          <PaginationItem key={page}>
-            <PaginationLink
-              href={getPageUrl(page)}
-              isActive={page === currentPage}
-            >
-              {page}
-            </PaginationLink>
-          </PaginationItem>
-        ))}
+        {(() => {
+          const renderPage = (page: number) => (
+            <PaginationItem key={page}>
+              <PaginationLink
+                href={getPageUrl(page)}
+                isActive={page === currentPage}
+              >
+                {page}
+              </PaginationLink>
+            </PaginationItem>
+          )
 
-        {totalPages > 5 && (
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-        )}
+          if (totalPages <= 7) {
+            return Array.from({ length: totalPages }, (_, i) => i + 1).map(
+              (p) => renderPage(p),
+            )
+          }
+
+          const start = Math.max(2, currentPage - 2)
+          const end = Math.min(totalPages - 1, currentPage + 2)
+
+          const items: React.ReactNode[] = []
+          items.push(renderPage(1))
+          if (start > 2) {
+            items.push(
+              <PaginationItem key="start-ellipsis">
+                <PaginationEllipsis />
+              </PaginationItem>,
+            )
+          }
+          for (let p = start; p <= end; p++) {
+            items.push(renderPage(p))
+          }
+          if (end < totalPages - 1) {
+            items.push(
+              <PaginationItem key="end-ellipsis">
+                <PaginationEllipsis />
+              </PaginationItem>,
+            )
+          }
+          items.push(renderPage(totalPages))
+          return items
+        })()}
 
         <PaginationItem>
           <PaginationNext

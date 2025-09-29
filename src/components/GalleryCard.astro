@@ -6,7 +6,7 @@ const imported = import.meta.glob(
     query: '?url',
     import: 'default',
   },
-) as Record<string, string>;
+) as Record<string, string>
 
 const entries = Object.entries(imported)
 const images = entries.map(([, url]) => url)

@@ -92,3 +92,13 @@
     @apply border-border outline-ring/50 tracking-tight;
   }
 }
+
+@layer base {
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  html.no-scroll {
+    overflow: hidden;
+  }
+}
