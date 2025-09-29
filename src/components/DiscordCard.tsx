@@ -95,8 +95,44 @@ const DiscordCard = () => {
   return (
     <div className="bg-card text-card-foreground relative h-full overflow-hidden rounded-lg border p-6">
       <div className="flex h-full flex-col items-start justify-start space-y-5">
-        {/* Profile Picture with Name - Desktop & Mobile */}
-        <div className="flex w-full items-center space-x-4 sm:hidden lg:flex">
+        {/* Profile Picture with Name - Desktop */}
+        <div className="hidden w-full items-start space-x-4 lg:flex">
+          <div className="relative flex-shrink-0">
+            <img
+              src={avatarUrl}
+              alt={`${displayName}'s Discord avatar`}
+              className="h-20 w-20 rounded-full object-cover"
+              onError={(e) => {
+                e.currentTarget.src = `https://cdn.discordapp.com/embed/avatars/${parseInt(status.discord_user.discriminator) % 5}.png`
+              }}
+            />
+            <StatusIndicator status={discordStatus} />
+          </div>
+
+          <div className="min-w-0 flex-1 pt-1">
+            {/* Name and Username */}
+            <div className="text-foreground truncate text-lg font-semibold">
+              {displayName}
+            </div>
+            {displayName !== username && (
+              <div className="text-muted-foreground mb-2 truncate text-sm">
+                @{username}
+              </div>
+            )}
+
+            {/* Discord Badge - Desktop */}
+            <div className="bg-muted/30 inline-block rounded-md">
+              <img
+                src="/static/discord_badge_rb.png"
+                alt="Discord Badge"
+                className="h-6 w-auto object-contain opacity-80 transition-opacity hover:opacity-100"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Profile Picture with Name - Mobile */}
+        <div className="flex w-full items-center space-x-4 sm:hidden">
           <div className="relative flex-shrink-0">
             <img
               src={avatarUrl}
@@ -119,6 +155,15 @@ const DiscordCard = () => {
                 @{username}
               </div>
             )}
+          </div>
+
+          {/* Discord Badge - Mobile */}
+          <div className="bg-muted/30 mt-16 flex-shrink-0 rounded-lg">
+            <img
+              src="/static/discord_badge_rb.png"
+              alt="Discord Badge"
+              className="object-contain opacity-80 transition-opacity hover:opacity-100"
+            />
           </div>
         </div>
 
