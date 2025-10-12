@@ -7,7 +7,7 @@ export function SnowfallEffect() {
   useEffect(() => {
     const updateColor = () => {
       const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
-      setSnowColor(isDark ? '#fff' : '#94f2f4')
+      setSnowColor(isDark ? '#fff' : '#ffffff')
     }
 
     updateColor()

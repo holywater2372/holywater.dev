@@ -123,7 +123,7 @@ const DiscordCard = () => {
             {/* Discord Badge - Desktop */}
             <div className="bg-muted/30 inline-block rounded-md">
               <img
-                src="/static/discord_badge_rb.png"
+                src="/static/discord_badges.svg"
                 alt="Discord Badge"
                 className="h-6 w-auto object-contain opacity-80 transition-opacity hover:opacity-100"
               />
