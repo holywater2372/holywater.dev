@@ -243,8 +243,14 @@ const DiscordCard = () => {
             </div>
           )}
 
+          
           {!activity && (
-            <div className="flex h-16 items-center justify-center">
+            <div className="flex h-16 items-center justify-center space-x-3">
+              <img
+                src="/static/discord-cat-status.svg"
+                alt="No status"
+                className="h-25 w-25 object-contain opacity-70"
+              />
               <div className="text-muted-foreground text-sm">No Status !</div>
             </div>
           )}
