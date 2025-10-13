@@ -2,8 +2,7 @@ import type { IconMap, SocialLink, Site } from '@/types'
 
 export const SITE: Site = {
   title: 'holywater.dev',
-  description:
-    'holywater.dev is a blog built with Astro, Tailwind, and shadcn/ui.',
+  description: "holywater.dev is my personal website built with Astro, Tailwind, and shadcn/ui.",
   href: 'https://holywater.dev',
   author: 'holywater',
   locale: 'en-US',
