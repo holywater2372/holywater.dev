@@ -160,7 +160,7 @@ const DiscordCard = () => {
           {/* Discord Badge - Mobile */}
           <div className="bg-muted/30 mt-16 flex-shrink-0 rounded-lg">
             <img
-              src="/static/discord_badge_rb.png"
+              src="/static/discord_badges.svg"
               alt="Discord Badge"
               className="object-contain opacity-80 transition-opacity hover:opacity-100"
             />
@@ -184,7 +184,7 @@ const DiscordCard = () => {
           {/* Discord Badge */}
           <div className="bg-muted/30 mt-11 flex-shrink-0 rounded-lg">
             <img
-              src="/static/discord_badge_rb.png"
+              src="/static/discord_badges.svg"
               alt="Discord Badge"
               className="object-contain opacity-80 transition-opacity hover:opacity-100"
             />

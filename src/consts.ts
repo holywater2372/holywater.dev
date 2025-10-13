@@ -33,7 +33,7 @@ export const NAV_LINKS: SocialLink[] = [
 
 export const SOCIAL_LINKS: SocialLink[] = [
   {
-    href: 'https://www.linkedin.com/in/dummy-account-485059181/',
+    href: 'https://www.linkedin.com/in/nazeef-hasan-khan/',
     label: 'LinkedIn',
   },
   {
