@@ -1,7 +1,7 @@
 ---
 name: 'holywater'
 pronouns: 'he/him'
-avatar: 'https://gravatar.com/avatar/9bfdc4ec972793cf05cb91efce5f4aaaec2a0da1bf4ec34dad0913f1d845faf6.webp?size=256'
+avatar: 'https://gravatar.com/avatar/aa1bec3db5484139f27e661f5da24aa2?size=256'
 bio: 'd(-_-)b'
 website: 'https://holywater.dev'
 linkedin: 'https://www.linkedin.com/in/nazeef-hasan-khan/'

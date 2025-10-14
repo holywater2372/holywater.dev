@@ -1,4 +1,4 @@
-![Showcase Card](/public/static/logo.png)
+![Showcase Card](/public/static/readme.png)
 
 <div align="center">
 
