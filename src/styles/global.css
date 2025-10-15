@@ -63,7 +63,7 @@
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(75.04% 0.05673 226.63);
+  --border: oklch(83.556% 0.04422 231.144 / 0.955);
   --ring: oklch(0.708 0 0);
 }
 
@@ -103,7 +103,7 @@
   }
 
   body {
-    background: linear-gradient(to bottom, oklch(74.804% 0.10194 228.036) 0%, oklch(0.9082 0.0338 225.47) 30%);
+    background: linear-gradient(to bottom, oklch(75.316% 0.10776 228.668 / 0.66) 0%, oklch(0.9082 0.0338 225.47) 30%);
     background-attachment: fixed;
     min-height: 100vh;
   }
