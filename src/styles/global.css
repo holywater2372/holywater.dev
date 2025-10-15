@@ -63,7 +63,7 @@
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(86.575% 0.04234 228.057);
+  --border: oklch(75.04% 0.05673 226.63);
   --ring: oklch(0.708 0 0);
 }
 
@@ -101,4 +101,17 @@
   html.no-scroll {
     overflow: hidden;
   }
+
+  body {
+    background: linear-gradient(to bottom, oklch(74.804% 0.10194 228.036) 0%, oklch(0.9082 0.0338 225.47) 30%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+  /* Apply gradient background for dark mode */
+  [data-theme='dark'] body {
+    background: linear-gradient(to bottom, oklch(30.783% 0.04808 259.541 / 0.842) 0%, oklch(19.184% 0.04252 259.065 / 0.842) 30%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+
 }
