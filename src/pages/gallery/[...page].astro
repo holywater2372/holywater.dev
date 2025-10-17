@@ -295,24 +295,24 @@ const images = page.data as string[]
     right: 20px;
   }
 
-  .lightbox-image-container {
+   .lightbox-image-container {
     display: flex;
     align-items: center;
     justify-content: center;
     max-width: 90vw;
-    max-height: 90vh;
+    max-height: calc(90vh - 60px);
   }
 
   .lightbox-image-container img {
     max-width: min(90vw, 1200px);
-    max-height: min(90vh, 800px);
+    max-height: calc(90vh - 60px);
     width: auto;
     height: auto;
     object-fit: contain;
     border-radius: 8px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   }
-
+  
   .lightbox-counter {
     position: absolute;
     bottom: -40px;
