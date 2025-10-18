@@ -7,7 +7,7 @@
 
 
 [holywater.dev](https://holywater.dev) is my personal website built with [Astro](https://astro.build/), [Tailwind](https://tailwindcss.com/), and [shadcn/ui](https://ui.shadcn.com/).
-Based on the blogging template, [astro-erudite](https://github.com/jktrn/astro-erudite).
+This blog was made possible with the help of [hyukii](https://github.com/snow0406) and using enscribe's [astro-erudite](https://github.com/jktrn/astro-erudite) template.
 
 </div>
 
