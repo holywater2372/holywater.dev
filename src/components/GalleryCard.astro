@@ -26,13 +26,53 @@ const alt = randomKey
 <div class="relative h-48 overflow-hidden rounded-lg border md:h-96">
   {
     randomImage && (
-      <img
-        src={randomImage}
-        alt={alt}
-        loading="lazy"
-        decoding="async"
-        class="block h-full w-full object-cover"
-      />
+      /* Uncomment to enable click redirect to /gallery */
+      /* <a href="/gallery" class="block h-full w-full cursor-pointer"> */
+        <img
+          id="gallery-image"
+          src={randomImage}
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+          class="block h-full w-full object-cover transition-opacity duration-500"
+          data-images={JSON.stringify(images)}
+          data-entries={JSON.stringify(entries)}
+        />
+      /* </a> */
     )
   }
 </div>
+
+<script>
+  const img = document.getElementById('gallery-image') as HTMLImageElement
+  if (img) {
+    const images = JSON.parse(img.dataset.images || '[]')
+    const entries = JSON.parse(img.dataset.entries || '[]')
+    
+    if (images.length > 1) {
+      setInterval(() => {
+        // Fade out
+        img.style.opacity = '0'
+        
+        setTimeout(() => {
+          // Pick random image
+          const randomIndex = Math.floor(Math.random() * images.length)
+          const newImage = images[randomIndex]
+          const newKey = entries[randomIndex][0]
+          const newAlt = newKey
+            .split('/')
+            .pop()
+            ?.replace(/\.[^/.]+$/, '')
+            ?.replace(/[-_]+/g, ' ') ?? ''
+          
+          // Update image
+          img.src = newImage
+          img.alt = newAlt
+          
+          // Fade in
+          img.style.opacity = '1'
+        }, 500) // Wait for fade out to complete
+      }, 10000) // Change every 10 seconds
+    }
+  }
+</script>
