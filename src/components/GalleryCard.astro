@@ -35,44 +35,114 @@ const alt = randomKey
           loading="lazy"
           decoding="async"
           class="block h-full w-full object-cover transition-opacity duration-500"
-          data-images={JSON.stringify(images)}
-          data-entries={JSON.stringify(entries)}
         />
       /* </a> */
     )
   }
 </div>
 
-<script>
-  const img = document.getElementById('gallery-image') as HTMLImageElement
-  if (img) {
-    const images = JSON.parse(img.dataset.images || '[]')
-    const entries = JSON.parse(img.dataset.entries || '[]')
-    
-    if (images.length > 1) {
-      setInterval(() => {
-        // Fade out
-        img.style.opacity = '0'
-        
-        setTimeout(() => {
-          // Pick random image
-          const randomIndex = Math.floor(Math.random() * images.length)
-          const newImage = images[randomIndex]
-          const newKey = entries[randomIndex][0]
-          const newAlt = newKey
-            .split('/')
-            .pop()
-            ?.replace(/\.[^/.]+$/, '')
-            ?.replace(/[-_]+/g, ' ') ?? ''
-          
-          // Update image
-          img.src = newImage
-          img.alt = newAlt
-          
-          // Fade in
-          img.style.opacity = '1'
-        }, 500) // Wait for fade out to complete
-      }, 10000) // Change every 10 seconds
+<script is:inline define:vars={{ images, entries }}>
+  function initGalleryRotation() {
+    // Safe DOM query with type check
+    const img = document.getElementById('gallery-image')
+    if (!img || !(img instanceof HTMLImageElement)) {
+      console.warn('Gallery image element not found or invalid')
+      return
     }
+    
+    // Validate data arrays
+    if (!Array.isArray(images) || !Array.isArray(entries)) {
+      console.warn('Gallery data is invalid')
+      return
+    }
+    
+    if (images.length <= 1) {
+      // Not enough images to rotate
+      return
+    }
+    
+    // Validate array lengths match
+    if (images.length !== entries.length) {
+      console.warn('Gallery data arrays length mismatch')
+      return
+    }
+    
+    let intervalId = null
+    
+    intervalId = setInterval(() => {
+      // Re-check element still exists (in case of DOM changes)
+      if (!document.getElementById('gallery-image')) {
+        if (intervalId) clearInterval(intervalId)
+        return
+      }
+      
+      try {
+        // Pick random image with bounds check
+        const randomIndex = Math.floor(Math.random() * images.length)
+        const newImage = images[randomIndex]
+        const newKey = entries[randomIndex]?.[0]
+        
+        // Validate we have valid data
+        if (!newImage || typeof newImage !== 'string') {
+          console.warn('Invalid image URL')
+          return
+        }
+        
+        // Safe alt text extraction
+        const newAlt = newKey && typeof newKey === 'string'
+          ? (newKey
+              .split('/')
+              .pop()
+              ?.replace(/\.[^/.]+$/, '')
+              ?.replace(/[-_]+/g, ' ') ?? '')
+          : ''
+        
+        // Preload the new image before transition
+        const preloadImg = new Image()
+        
+        preloadImg.onerror = function() {
+          console.warn('Failed to load gallery image:', newImage)
+        }
+        
+        preloadImg.onload = function() {
+          // Double-check img still exists before manipulating
+          if (!img.parentNode) {
+            if (intervalId) clearInterval(intervalId)
+            return
+          }
+          
+          // Only start fade after image is loaded
+          img.style.opacity = '0'
+          
+          setTimeout(() => {
+            // Triple-check before final update
+            if (!img.parentNode) {
+              if (intervalId) clearInterval(intervalId)
+              return
+            }
+            
+            // Update image safely
+            img.src = newImage
+            img.alt = newAlt
+            
+            // Fade in
+            img.style.opacity = '1'
+          }, 500) // Wait for fade out to complete
+        }
+        
+        preloadImg.src = newImage
+        
+      } catch (error) {
+        console.error('Error rotating gallery image:', error)
+        if (intervalId) clearInterval(intervalId)
+      }
+    }, 10000) // Change every 10 seconds
+  }
+  
+  // Run on load with proper timing
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initGalleryRotation)
+  } else {
+    initGalleryRotation()
   }
 </script>
