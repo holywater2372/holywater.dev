@@ -7,41 +7,11 @@ interface GalleryLightboxProps {
 const GalleryLightbox: React.FC<GalleryLightboxProps> = ({
   selector = '.masonry-item img',
 }) => {
-  const [isLoading, setIsLoading] = React.useState(true)
-  const [shouldRender, setShouldRender] = React.useState(true)
-  const [fadeIn, setFadeIn] = React.useState(false)
-
   React.useEffect(() => {
-    // Trigger fade in after mount
-    requestAnimationFrame(() => {
-      setFadeIn(true)
-    })
     const imageEls = Array.from(
       document.querySelectorAll<HTMLImageElement>(selector),
     )
     const images = imageEls.map((img) => img.src)
-
-    // Wait for all images to load
-    const imageLoadPromises = imageEls.map((img) => {
-      if (img.complete) {
-        return Promise.resolve()
-      }
-      return new Promise<void>((resolve) => {
-        img.addEventListener('load', () => resolve())
-        img.addEventListener('error', () => resolve()) // Still resolve on error to not block
-      })
-    })
-
-    Promise.all(imageLoadPromises).then(() => {
-      // Give the masonry grid a moment to settle
-      setTimeout(() => {
-        setIsLoading(false)
-        // Wait for fade out animation before unmounting
-        setTimeout(() => {
-          setShouldRender(false)
-        }, 300)
-      }, 300)
-    })
 
     const lightbox = document.getElementById(
       'lightbox',
@@ -163,6 +133,7 @@ const GalleryLightbox: React.FC<GalleryLightboxProps> = ({
     document.addEventListener('keydown', keydownHandler)
 
     return () => {
+      // cleanup
       containerItems.forEach((item, idx) => {
         const handler = clickHandlers[idx]
         if (handler) item.removeEventListener('click', handler)
@@ -175,89 +146,7 @@ const GalleryLightbox: React.FC<GalleryLightboxProps> = ({
     }
   }, [selector])
 
-  if (!shouldRender) return null
-
-  return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.3)',
-        backdropFilter: 'blur(8px)',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 9999,
-        opacity: fadeIn && isLoading ? 1 : 0,
-        transition: 'opacity 0.3s ease',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          gap: '12px',
-        }}
-      >
-        <div
-          style={{
-            width: '16px',
-            height: '16px',
-            borderRadius: '50%',
-            backgroundColor: '#ffffff',
-            animation: 'bounce 1.4s infinite ease-in-out both',
-            animationDelay: '0s',
-          }}
-        />
-        <div
-          style={{
-            width: '16px',
-            height: '16px',
-            borderRadius: '50%',
-            backgroundColor: '#ffffff',
-            animation: 'bounce 1.4s infinite ease-in-out both',
-            animationDelay: '0.2s',
-          }}
-        />
-        <div
-          style={{
-            width: '16px',
-            height: '16px',
-            borderRadius: '50%',
-            backgroundColor: '#ffffff',
-            animation: 'bounce 1.4s infinite ease-in-out both',
-            animationDelay: '0.4s',
-          }}
-        />
-      </div>
-      <p
-        style={{
-          marginTop: '24px',
-          fontSize: '16px',
-          color: '#ffffff',
-          fontFamily: 'Geist, system-ui, -apple-system, sans-serif',
-          textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
-        }}
-      >
-      Loading...
-      </p>
-      <style>{`
-        @keyframes bounce {
-          0%, 80%, 100% { 
-            transform: scale(0);
-            opacity: 0.5;
-          }
-          40% { 
-            transform: scale(1);
-            opacity: 1;
-          }
-        }
-      `}</style>
-    </div>
-  )
+  return null
 }
 
 export default GalleryLightbox
