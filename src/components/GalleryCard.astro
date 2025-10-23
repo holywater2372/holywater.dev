@@ -10,12 +10,11 @@ const imported = import.meta.glob(
 
 const entries = Object.entries(imported)
 const images = entries.map(([, url]) => url)
-const randomIndex =
-  images.length > 0 ? Math.floor(Math.random() * images.length) : -1
-const randomImage = randomIndex >= 0 ? images[randomIndex] : undefined
-const randomKey = randomIndex >= 0 ? entries[randomIndex][0] : ''
-const alt = randomKey
-  ? (randomKey
+// Use first image as placeholder, will be replaced immediately by client script
+const placeholderImage = images.length > 0 ? images[0] : undefined
+const placeholderKey = images.length > 0 ? entries[0][0] : ''
+const placeholderAlt = placeholderKey
+  ? (placeholderKey
       .split('/')
       .pop()
       ?.replace(/\.[^/.]+$/, '')
@@ -25,24 +24,33 @@ const alt = randomKey
 
 <div class="relative h-48 overflow-hidden rounded-lg border md:h-96">
   {
-    randomImage && (
+    placeholderImage && (
       /* Uncomment to enable click redirect to /gallery */
       /* <a href="/gallery" class="block h-full w-full cursor-pointer"> */
         <img
           id="gallery-image"
-          src={randomImage}
-          alt={alt}
+          src={placeholderImage}
+          alt={placeholderAlt}
           loading="lazy"
           decoding="async"
           class="block h-full w-full object-cover transition-opacity duration-500"
+          style="opacity: 0;"
+          data-gallery-placeholder="true"
         />
       /* </a> */
     )
   }
 </div>
 
-<script is:inline define:vars={{ images, entries }}>
+<script define:vars={{ images, entries }}>
+  let galleryIntervalId = null;
+  
   function initGalleryRotation() {
+    // Clear any existing interval to prevent duplicates
+    if (galleryIntervalId) {
+      clearInterval(galleryIntervalId);
+      galleryIntervalId = null;
+    }
     // Safe DOM query with type check
     const img = document.getElementById('gallery-image')
     if (!img || !(img instanceof HTMLImageElement)) {
@@ -56,8 +64,7 @@ const alt = randomKey
       return
     }
     
-    if (images.length <= 1) {
-      // Not enough images to rotate
+    if (images.length === 0) {
       return
     }
     
@@ -67,82 +74,98 @@ const alt = randomKey
       return
     }
     
-    let intervalId = null
-    
-    intervalId = setInterval(() => {
-      // Re-check element still exists (in case of DOM changes)
-      if (!document.getElementById('gallery-image')) {
-        if (intervalId) clearInterval(intervalId)
+    // Function to pick and display a random image
+    function showRandomImage(isInitial = false) {
+      const randomIndex = Math.floor(Math.random() * images.length)
+      const newImage = images[randomIndex]
+      const newKey = entries[randomIndex]?.[0]
+      
+      if (!newImage || typeof newImage !== 'string') {
+        console.warn('Invalid image URL')
         return
       }
       
-      try {
-        // Pick random image with bounds check
-        const randomIndex = Math.floor(Math.random() * images.length)
-        const newImage = images[randomIndex]
-        const newKey = entries[randomIndex]?.[0]
+      const newAlt = newKey && typeof newKey === 'string'
+        ? (newKey
+            .split('/')
+            .pop()
+            ?.replace(/\.[^/.]+$/, '')
+            ?.replace(/[-_]+/g, ' ') ?? '')
+        : ''
+      
+      // Preload the new image before transition
+      const preloadImg = new Image()
+      
+      preloadImg.onerror = function() {
+        console.warn('Failed to load gallery image:', newImage)
+      }
+      
+      preloadImg.onload = function() {
+        if (!img.parentNode) return
         
-        // Validate we have valid data
-        if (!newImage || typeof newImage !== 'string') {
-          console.warn('Invalid image URL')
-          return
-        }
-        
-        // Safe alt text extraction
-        const newAlt = newKey && typeof newKey === 'string'
-          ? (newKey
-              .split('/')
-              .pop()
-              ?.replace(/\.[^/.]+$/, '')
-              ?.replace(/[-_]+/g, ' ') ?? '')
-          : ''
-        
-        // Preload the new image before transition
-        const preloadImg = new Image()
-        
-        preloadImg.onerror = function() {
-          console.warn('Failed to load gallery image:', newImage)
-        }
-        
-        preloadImg.onload = function() {
-          // Double-check img still exists before manipulating
-          if (!img.parentNode) {
-            if (intervalId) clearInterval(intervalId)
-            return
-          }
-          
-          // Only start fade after image is loaded
+        // For initial load, skip fade transition for immediate display
+        if (isInitial) {
+          img.src = newImage
+          img.alt = newAlt
+          img.style.opacity = '.85'
+        } else {
           img.style.opacity = '0'
           
           setTimeout(() => {
-            // Triple-check before final update
-            if (!img.parentNode) {
-              if (intervalId) clearInterval(intervalId)
-              return
-            }
+            if (!img.parentNode) return
             
-            // Update image safely
             img.src = newImage
             img.alt = newAlt
-            
-            // Fade in
-            img.style.opacity = '1'
-          }, 500) // Wait for fade out to complete
+            img.style.opacity = '.85'
+          }, 500)
+        }
+      }
+      
+      preloadImg.src = newImage
+    }
+    
+    // Show initial random image immediately (no transition)
+    showRandomImage(true)
+    
+    // Then rotate every 10 seconds
+    if (images.length > 1) {
+      galleryIntervalId = setInterval(() => {
+        if (!document.getElementById('gallery-image')) {
+          if (galleryIntervalId) {
+            clearInterval(galleryIntervalId);
+            galleryIntervalId = null;
+          }
+          return
         }
         
-        preloadImg.src = newImage
-        
-      } catch (error) {
-        console.error('Error rotating gallery image:', error)
-        if (intervalId) clearInterval(intervalId)
-      }
-    }, 10000) // Change every 10 seconds
+        try {
+          showRandomImage()
+        } catch (error) {
+          console.error('Error rotating gallery image:', error)
+          if (galleryIntervalId) {
+            clearInterval(galleryIntervalId);
+            galleryIntervalId = null;
+          }
+        }
+      }, 10000)
+    }
   }
   
-  // Run on load with proper timing
+  // Run on initial load
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initGalleryRotation)
   } else {
     initGalleryRotation()
   }
+  
+  // Re-run when navigating back (for Astro View Transitions or SPA navigation)
+  document.addEventListener('astro:page-load', initGalleryRotation)
+  
+  // Cleanup on navigation away
+  document.addEventListener('astro:before-preparation', () => {
+    if (galleryIntervalId) {
+      clearInterval(galleryIntervalId);
+      galleryIntervalId = null;
+    }
+  })
 </script>
