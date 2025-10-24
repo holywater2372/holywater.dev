@@ -1,4 +1,5 @@
 ---
+// 1. Import all gallery images as URLs
 const imported = import.meta.glob(
   '../content/gallery/*.{jpg,jpeg,png,webp,avif,gif}',
   {
@@ -8,164 +9,138 @@ const imported = import.meta.glob(
   },
 ) as Record<string, string>
 
+// 2. Extract URLs and original entry keys
 const entries = Object.entries(imported)
 const images = entries.map(([, url]) => url)
-// Use first image as placeholder, will be replaced immediately by client script
-const placeholderImage = images.length > 0 ? images[0] : undefined
-const placeholderKey = images.length > 0 ? entries[0][0] : ''
-const placeholderAlt = placeholderKey
-  ? (placeholderKey
-      .split('/')
-      .pop()
-      ?.replace(/\.[^/.]+$/, '')
-      ?.replace(/[-_]+/g, ' ') ?? '')
-  : ''
 ---
 
 <div class="relative h-48 overflow-hidden rounded-lg border md:h-96">
   {
-    placeholderImage && (
-      /* Uncomment to enable click redirect to /gallery */
-      /* <a href="/gallery" class="block h-full w-full cursor-pointer"> */
-        <img
-          id="gallery-image"
-          src={placeholderImage}
-          alt={placeholderAlt}
-          loading="lazy"
-          decoding="async"
-          class="block h-full w-full object-cover transition-opacity duration-500"
-          style="opacity: 0;"
-          data-gallery-placeholder="true"
-        />
-      /* </a> */
+    images.length > 0 && (
+      <img
+        id="gallery-image"
+        
+        src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+        alt="" 
+        loading="lazy"
+        decoding="async"
+        
+        class="block h-full w-full object-cover transition-opacity duration-500"
+        style="opacity: 0;"
+      />
     )
   }
 </div>
 
 <script define:vars={{ images, entries }}>
-  let galleryIntervalId = null;
-  
+  let galleryIntervalId = null
+  let currentIndex = -1
+
   function initGalleryRotation() {
-    // Clear any existing interval to prevent duplicates
     if (galleryIntervalId) {
-      clearInterval(galleryIntervalId);
-      galleryIntervalId = null;
+      clearInterval(galleryIntervalId)
+      galleryIntervalId = null
     }
-    // Safe DOM query with type check
+
     const img = document.getElementById('gallery-image')
-    if (!img || !(img instanceof HTMLImageElement)) {
-      console.warn('Gallery image element not found or invalid')
+    if (!img || !(img instanceof HTMLImageElement) || images.length === 0 || images.length !== entries.length) {
       return
     }
-    
-    // Validate data arrays
-    if (!Array.isArray(images) || !Array.isArray(entries)) {
-      console.warn('Gallery data is invalid')
-      return
-    }
-    
-    if (images.length === 0) {
-      return
-    }
-    
-    // Validate array lengths match
-    if (images.length !== entries.length) {
-      console.warn('Gallery data arrays length mismatch')
-      return
-    }
-    
-    // Function to pick and display a random image
+
+    currentIndex = -1
+
     function showRandomImage(isInitial = false) {
-      const randomIndex = Math.floor(Math.random() * images.length)
+      let randomIndex
+
+      // 1. Select a random index, avoiding the current image if possible
+      if (images.length > 1) {
+        do {
+          randomIndex = Math.floor(Math.random() * images.length)
+        } while (randomIndex === currentIndex)
+      } else {
+        randomIndex = 0
+      }
+      currentIndex = randomIndex
+
       const newImage = images[randomIndex]
       const newKey = entries[randomIndex]?.[0]
-      
-      if (!newImage || typeof newImage !== 'string') {
-        console.warn('Invalid image URL')
-        return
-      }
-      
-      const newAlt = newKey && typeof newKey === 'string'
-        ? (newKey
-            .split('/')
-            .pop()
-            ?.replace(/\.[^/.]+$/, '')
-            ?.replace(/[-_]+/g, ' ') ?? '')
-        : ''
-      
-      // Preload the new image before transition
+
+      if (!newImage) return
+
+      // 2. Generate alt text
+      const newAlt =
+        newKey
+          ? (newKey
+              .split('/')
+              .pop()
+              ?.replace(/\.[^/.]+$/, '')
+              ?.replace(/[-_]+/g, ' ') ?? '')
+          : ''
+
+      // 3. Preload the new image
       const preloadImg = new Image()
-      
-      preloadImg.onerror = function() {
-        console.warn('Failed to load gallery image:', newImage)
-      }
-      
-      preloadImg.onload = function() {
+      preloadImg.onerror = () => console.warn('Failed to load gallery image:', newImage)
+
+      preloadImg.onload = function () {
         if (!img.parentNode) return
-        
-        // For initial load, skip fade transition for immediate display
+
         if (isInitial) {
+          // Initial Load: Set src and fade-in immediately, ensuring the image is loaded first.
           img.src = newImage
           img.alt = newAlt
           img.style.opacity = '.85'
         } else {
+          // Subsequent images: Fade out, swap src/alt, then fade in after 500ms transition.
           img.style.opacity = '0'
           
           setTimeout(() => {
             if (!img.parentNode) return
-            
             img.src = newImage
             img.alt = newAlt
             img.style.opacity = '.85'
           }, 500)
         }
       }
-      
+
       preloadImg.src = newImage
     }
-    
-    // Show initial random image immediately (no transition)
+
+    // Start rotation immediately
     showRandomImage(true)
-    
-    // Then rotate every 10 seconds
+
+    // Set up rotation interval (10 seconds)
     if (images.length > 1) {
       galleryIntervalId = setInterval(() => {
         if (!document.getElementById('gallery-image')) {
-          if (galleryIntervalId) {
-            clearInterval(galleryIntervalId);
-            galleryIntervalId = null;
-          }
+          clearInterval(galleryIntervalId)
+          galleryIntervalId = null
           return
         }
         
         try {
-          showRandomImage()
+          showRandomImage(false)
         } catch (error) {
           console.error('Error rotating gallery image:', error)
-          if (galleryIntervalId) {
-            clearInterval(galleryIntervalId);
-            galleryIntervalId = null;
-          }
+          clearInterval(galleryIntervalId)
+          galleryIntervalId = null
         }
       }, 10000)
     }
   }
-  
-  // Run on initial load
+
+  // Event Listeners for Page Load and SPA Navigation
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initGalleryRotation)
   } else {
     initGalleryRotation()
   }
-  
-  // Re-run when navigating back (for Astro View Transitions or SPA navigation)
+
   document.addEventListener('astro:page-load', initGalleryRotation)
-  
-  // Cleanup on navigation away
+
   document.addEventListener('astro:before-preparation', () => {
     if (galleryIntervalId) {
-      clearInterval(galleryIntervalId);
-      galleryIntervalId = null;
+      clearInterval(galleryIntervalId)
+      galleryIntervalId = null
     }
   })
 </script>
