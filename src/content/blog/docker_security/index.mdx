@@ -3,7 +3,7 @@ title: 'Securing Containers: Docker Hardening 101'
 description: 'Whenever you depend on Node packages with missing maintainers, patching becomes a necessary evil.'
 date: 2024-03-04
 tags: ['docker','ansible','container', 'hardening']
-image: './docker1.svg'
+image: './resources/docker1.svg'
 authors: ['holywater']
 ---
 import Callout from '@/components/Callout.astro'
@@ -133,7 +133,7 @@ Back the case study where we were provided a vulnerable `CentOS version 7` Docke
 
 Firstly, due to CentOS's deprecation, the infrastructure was transitioned to a more current and supported `Ubuntu` base image, version `22.04.3 LTS "Jammy Jellyfish"`.
 
-![](./centos.png)
+![](./resources/centos.png)
 
 The following changes had to be made in the configuration files of the application also bolstering the overall posture:
 - Replacing `nginx` user with the `www-data` user.

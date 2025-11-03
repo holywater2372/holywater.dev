@@ -125,81 +125,89 @@ const DiscordCard = () => {
               <img
                 src="/static/discord_badges.svg"
                 alt="Discord Badge"
-                className="h-6 w-auto object-contain opacity-80 transition-opacity hover:opacity-100"
+                className="h-7 w-auto object-contain opacity-80 transition-opacity hover:opacity-100"
               />
             </div>
           </div>
         </div>
 
         {/* Profile Picture with Name - Mobile */}
-        <div className="flex w-full items-center space-x-4 sm:hidden">
-          <div className="relative flex-shrink-0">
-            <img
-              src={avatarUrl}
-              alt={`${displayName}'s Discord avatar`}
-              className="h-20 w-20 rounded-full object-cover"
-              onError={(e) => {
-                e.currentTarget.src = `https://cdn.discordapp.com/embed/avatars/${parseInt(status.discord_user.discriminator) % 5}.png`
-              }}
-            />
-            <StatusIndicator status={discordStatus} />
-          </div>
-
-          {/* Name and Username */}
-          <div className="min-w-0 flex-1">
-            <div className="text-foreground truncate text-lg font-semibold">
-              {displayName}
+        <div className="w-full sm:hidden">
+          <div className="flex items-center space-x-4">
+            <div className="relative flex-shrink-0">
+              <img
+                src={avatarUrl}
+                alt={`${displayName}'s Discord avatar`}
+                className="h-20 w-20 rounded-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.src = `https://cdn.discordapp.com/embed/avatars/${parseInt(status.discord_user.discriminator) % 5}.png`
+                }}
+              />
+              <StatusIndicator status={discordStatus} />
             </div>
-            {displayName !== username && (
-              <div className="text-muted-foreground truncate text-sm">
-                @{username}
-              </div>
-            )}
-          </div>
 
-          {/* Discord Badge - Mobile */}
-          <div className="bg-muted/30 mt-16 flex-shrink-0 rounded-lg">
-            <img
-              src="/static/discord_badges.svg"
-              alt="Discord Badge"
-              className="object-contain opacity-80 transition-opacity hover:opacity-100"
-            />
+            {/* Name and Username */}
+            <div className="min-w-0 flex-1">
+              <div className="text-foreground truncate text-lg font-semibold">
+                {displayName}
+              </div>
+              {displayName !== username && (
+                <div className="text-muted-foreground truncate text-sm">
+                  @{username}
+                </div>
+              )}
+              
+              {/* Discord Badge - Mobile */}
+              <div className="bg-muted/30 mt-2 inline-block rounded-md">
+                <img
+                  src="/static/discord_badges.svg"
+                  alt="Discord Badge"
+                  className="h-6 w-auto object-contain opacity-80 transition-opacity hover:opacity-100"
+                />
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Profile Picture with Badge - Tablet */}
-        <div className="hidden w-full items-center justify-between sm:flex lg:hidden">
-          <div className="relative flex-shrink-0">
-            <img
-              src={avatarUrl}
-              alt={`${displayName}'s Discord avatar`}
-              className="h-20 w-20 rounded-full object-cover"
-              onError={(e) => {
-                e.currentTarget.src = `https://cdn.discordapp.com/embed/avatars/${parseInt(status.discord_user.discriminator) % 5}.png`
-              }}
-            />
-            <StatusIndicator status={discordStatus} />
-          </div>
+        <div className="hidden w-full sm:flex lg:hidden">
+          <div className="flex w-full items-start space-x-4">
+            <div className="relative flex-shrink-0">
+              <img
+                src={avatarUrl}
+                alt={`${displayName}'s Discord avatar`}
+                className="h-20 w-20 rounded-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.src = `https://cdn.discordapp.com/embed/avatars/${parseInt(status.discord_user.discriminator) % 5}.png`
+                }}
+              />
+              <StatusIndicator status={discordStatus} />
+            </div>
 
-          {/* Discord Badge */}
-          <div className="bg-muted/30 mt-11 flex-shrink-0 rounded-lg">
-            <img
-              src="/static/discord_badges.svg"
-              alt="Discord Badge"
-              className="object-contain opacity-80 transition-opacity hover:opacity-100"
-            />
+            {/* Name and Username */}
+            <div className="min-w-0 flex-1 pt-1">
+              <div className="text-foreground truncate text-lg font-semibold">
+                {displayName}
+              </div>
+              {displayName !== username && (
+                <div className="text-muted-foreground mb-2 truncate text-sm">
+                  @{username}
+                </div>
+              )}
+
+              {/* Discord Badge - Tablet */}
+              <div className="bg-muted/30 inline-block rounded-md">
+                <img
+                  src="/static/discord_badges.svg"
+                  alt="Discord Badge"
+                  className="h-6 w-auto object-contain opacity-80 transition-opacity hover:opacity-100"
+                />
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Name Section - Tablet Only */}
-        <div className="bg-muted/30 hidden w-full rounded-lg px-4 py-3 text-left sm:block lg:hidden">
-          <div className="text-foreground text-lg font-semibold">
-            {displayName}
-          </div>
-          {displayName !== username && (
-            <div className="text-muted-foreground text-sm">@{username}</div>
-          )}
-        </div>
+        {/* Name Section - Tablet Only (REMOVED) */}
 
         {/* Status Section */}
         <div className="bg-muted/30 w-full rounded-lg px-3 py-3">

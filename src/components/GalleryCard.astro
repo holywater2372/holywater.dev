@@ -1,5 +1,4 @@
 ---
-// 1. Import all gallery images as URLs
 const imported = import.meta.glob(
   '../content/gallery/*.{jpg,jpeg,png,webp,avif,gif}',
   {
@@ -9,9 +8,11 @@ const imported = import.meta.glob(
   },
 ) as Record<string, string>
 
-// 2. Extract URLs and original entry keys
 const entries = Object.entries(imported)
 const images = entries.map(([, url]) => url)
+
+// Pick random starting image
+const randomStart = images.length > 0 ? images[Math.floor(Math.random() * images.length)] : ''
 ---
 
 <div class="relative h-48 overflow-hidden rounded-lg border md:h-96">
@@ -19,12 +20,8 @@ const images = entries.map(([, url]) => url)
     images.length > 0 && (
       <img
         id="gallery-image"
-        
-        src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+        src={randomStart}
         alt="" 
-        loading="lazy"
-        decoding="async"
-        
         class="block h-full w-full object-cover transition-opacity duration-500"
         style="opacity: 0;"
       />
@@ -32,115 +29,58 @@ const images = entries.map(([, url]) => url)
   }
 </div>
 
-<script define:vars={{ images, entries }}>
-  let galleryIntervalId = null
-  let currentIndex = -1
+<script define:vars={{ images }}>
+  let currentIndex = 0
+  let intervalId = null
 
-  function initGalleryRotation() {
-    if (galleryIntervalId) {
-      clearInterval(galleryIntervalId)
-      galleryIntervalId = null
-    }
-
+  function showRandomImage() {
     const img = document.getElementById('gallery-image')
-    if (!img || !(img instanceof HTMLImageElement) || images.length === 0 || images.length !== entries.length) {
-      return
-    }
+    if (!img || images.length === 0) return
 
-    currentIndex = -1
+    // Pick random index different from current
+    let newIndex
+    do {
+      newIndex = Math.floor(Math.random() * images.length)
+    } while (newIndex === currentIndex && images.length > 1)
+    
+    currentIndex = newIndex
 
-    function showRandomImage(isInitial = false) {
-      let randomIndex
-
-      // 1. Select a random index, avoiding the current image if possible
-      if (images.length > 1) {
-        do {
-          randomIndex = Math.floor(Math.random() * images.length)
-        } while (randomIndex === currentIndex)
-      } else {
-        randomIndex = 0
-      }
-      currentIndex = randomIndex
-
-      const newImage = images[randomIndex]
-      const newKey = entries[randomIndex]?.[0]
-
-      if (!newImage) return
-
-      // 2. Generate alt text
-      const newAlt =
-        newKey
-          ? (newKey
-              .split('/')
-              .pop()
-              ?.replace(/\.[^/.]+$/, '')
-              ?.replace(/[-_]+/g, ' ') ?? '')
-          : ''
-
-      // 3. Preload the new image
-      const preloadImg = new Image()
-      preloadImg.onerror = () => console.warn('Failed to load gallery image:', newImage)
-
-      preloadImg.onload = function () {
-        if (!img.parentNode) return
-
-        if (isInitial) {
-          // Initial Load: Set src and fade-in immediately, ensuring the image is loaded first.
-          img.src = newImage
-          img.alt = newAlt
-          img.style.opacity = '.85'
-        } else {
-          // Subsequent images: Fade out, swap src/alt, then fade in after 500ms transition.
-          img.style.opacity = '0'
-          
-          setTimeout(() => {
-            if (!img.parentNode) return
-            img.src = newImage
-            img.alt = newAlt
-            img.style.opacity = '.85'
-          }, 500)
-        }
-      }
-
-      preloadImg.src = newImage
-    }
-
-    // Start rotation immediately
-    showRandomImage(true)
-
-    // Set up rotation interval (10 seconds)
-    if (images.length > 1) {
-      galleryIntervalId = setInterval(() => {
-        if (!document.getElementById('gallery-image')) {
-          clearInterval(galleryIntervalId)
-          galleryIntervalId = null
-          return
-        }
-        
-        try {
-          showRandomImage(false)
-        } catch (error) {
-          console.error('Error rotating gallery image:', error)
-          clearInterval(galleryIntervalId)
-          galleryIntervalId = null
-        }
-      }, 10000)
-    }
+    // Fade out
+    img.style.opacity = '0'
+    
+    // Change image after fade
+    setTimeout(() => {
+      img.src = images[currentIndex]
+      img.style.opacity = '0.85'
+    }, 500)
   }
 
-  // Event Listeners for Page Load and SPA Navigation
+  function init() {
+    if (intervalId) clearInterval(intervalId)
+    
+    const img = document.getElementById('gallery-image')
+    if (!img) return
+
+    // Fade in the first image
+    setTimeout(() => {
+      img.style.opacity = '0.85'
+    }, 100)
+
+    if (images.length <= 1) return
+
+    // Start random rotation every 10 seconds
+    intervalId = setInterval(showRandomImage, 10000)
+  }
+
+  // Initialize
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initGalleryRotation)
+    document.addEventListener('DOMContentLoaded', init)
   } else {
-    initGalleryRotation()
+    init()
   }
 
-  document.addEventListener('astro:page-load', initGalleryRotation)
-
+  document.addEventListener('astro:page-load', init)
   document.addEventListener('astro:before-preparation', () => {
-    if (galleryIntervalId) {
-      clearInterval(galleryIntervalId)
-      galleryIntervalId = null
-    }
+    if (intervalId) clearInterval(intervalId)
   })
 </script>
