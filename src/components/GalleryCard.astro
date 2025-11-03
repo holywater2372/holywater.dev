@@ -23,36 +23,42 @@ const randomStart = images.length > 0 ? images[Math.floor(Math.random() * images
         src={randomStart}
         alt="" 
         class="block h-full w-full object-cover transition-opacity duration-500"
-        style="opacity: 0;"
+        style="opacity: 0; will-change: opacity; transform: translateZ(0);"
       />
     )
   }
 </div>
 
-<script define:vars={{ images }}>
-  let currentIndex = 0
+<script define:vars={{ images, randomStart }}>
+  let currentImage = randomStart
   let intervalId = null
 
   function showRandomImage() {
     const img = document.getElementById('gallery-image')
     if (!img || images.length === 0) return
 
-    // Pick random index different from current
-    let newIndex
+    // Pick random image different from current
+    let newImage
     do {
-      newIndex = Math.floor(Math.random() * images.length)
-    } while (newIndex === currentIndex && images.length > 1)
+      const randomIndex = Math.floor(Math.random() * images.length)
+      newImage = images[randomIndex]
+    } while (newImage === currentImage && images.length > 1)
     
-    currentIndex = newIndex
+    currentImage = newImage
 
-    // Fade out
-    img.style.opacity = '0'
-    
-    // Change image after fade
-    setTimeout(() => {
-      img.src = images[currentIndex]
-      img.style.opacity = '0.85'
-    }, 500)
+    // Preload new image first
+    const preload = new Image()
+    preload.onload = () => {
+      // Fade out
+      img.style.opacity = '0'
+      
+      // Change image after fade completes
+      setTimeout(() => {
+        img.src = currentImage
+        img.style.opacity = '0.85'
+      }, 500)
+    }
+    preload.src = newImage
   }
 
   function init() {
