@@ -125,7 +125,7 @@ const DiscordCard = () => {
               <img
                 src="/static/discord_badges.svg"
                 alt="Discord Badge"
-                className="h-7 w-auto object-contain opacity-80 transition-opacity hover:opacity-100"
+                className="h-6 w-auto object-contain opacity-80 transition-opacity hover:opacity-100"
               />
             </div>
           </div>
