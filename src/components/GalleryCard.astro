@@ -10,9 +10,6 @@ const imported = import.meta.glob(
 
 const entries = Object.entries(imported)
 const images = entries.map(([, url]) => url)
-
-// Pick random starting image
-const randomStart = images.length > 0 ? images[Math.floor(Math.random() * images.length)] : ''
 ---
 
 <div class="relative h-48 overflow-hidden rounded-lg border md:h-96">
@@ -20,7 +17,7 @@ const randomStart = images.length > 0 ? images[Math.floor(Math.random() * images
     images.length > 0 && (
       <img
         id="gallery-image"
-        src={randomStart}
+        src=""
         alt="" 
         class="block h-full w-full object-cover transition-opacity duration-500"
         style="opacity: 0; will-change: opacity; transform: translateZ(0);"
@@ -29,8 +26,10 @@ const randomStart = images.length > 0 ? images[Math.floor(Math.random() * images
   }
 </div>
 
-<script define:vars={{ images, randomStart }}>
-  let currentImage = randomStart
+<script define:vars={{ images }}>
+  // Pick random starting image on client side
+  const randomIndex = Math.floor(Math.random() * images.length)
+  let currentImage = images.length > 0 ? images[randomIndex] : ''
   let intervalId = null
 
   function showRandomImage() {
@@ -65,7 +64,10 @@ const randomStart = images.length > 0 ? images[Math.floor(Math.random() * images
     if (intervalId) clearInterval(intervalId)
     
     const img = document.getElementById('gallery-image')
-    if (!img) return
+    if (!img || images.length === 0) return
+
+    // Set the random starting image
+    img.src = currentImage
 
     // Fade in the first image
     setTimeout(() => {
