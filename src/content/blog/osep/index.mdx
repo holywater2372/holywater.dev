@@ -1,0 +1,90 @@
+---
+title: 'Mandatory OSEP Review - 2025'
+description: 'My first experience with Offsec'
+date: 2025-04-01
+tags: ['certification','offsec','osep']
+image: './resources/osep.png'
+authors: ['holywater']
+---
+import Callout from '@/components/Callout.astro'
+
+<Callout variant="important">
+Views expressed here are entirely my own and don't reflect those of my employer or OffSec. Your mileage may vary.
+</Callout>
+
+
+Right, I'm not going to faff about explaining why I'm writing this. You lot already know the drill with certification reviews. On 18th March 2025, I got my OSEP results - a cert I paid for out of my own pocket to the tune of £1,400 (roughly $1,750 USD). Ouch.
+
+It took me two attempts, but before you start thinking I bottled the first one - I didn't actually fail. The exam environment went completely sideways, which OffSec confirmed on their end. Fair play to them, they offered me a free retake without any hassle.
+
+Now, I've done a [CPTS](https://holywater.dev/blog/cpts/) "how-to" review before, but I'm not doing that here. There are already hundreds of those cluttering up Google search results. This is just my honest take on OffSec and OSEP overall. Keep in mind - these views are entirely my own.
+
+![](./resources/review.png)
+
+
+Alright, here we go.
+
+## The Course: A Solid Foundation (If You've Got the Prerequisites)
+
+To be fair, the course material is genuinely good. It lays down a proper foundation in Windows APIs and evasion techniques that you can actually build on. Having done CRTO before sitting this exam, I was already familiar with most of the techniques they cover. What I *wasn't* familiar with was writing payloads and shellcode in C# and PowerShell.
+
+<Callout variant="tip">
+Come into this course with at least a working understanding of `C#` and `PowerShell`. You don't need to be a wizard, but you'll get significantly more out of the evasion content if you're not trying to learn syntax whilst simultaneously wrapping your head around other injections.
+</Callout>
+
+The course does an excellent job of teaching the **know-hows** of various tools and techniques. My personal favourite was the deep dive into understanding and reversing AMSI. I keep coming back to this because, surprise surprise, most of the public bypasses don't work on the latest Windows machines anymore. Funny that.
+
+## Module Breakdown: The Journey Through the Material
+
+The course kicks off with **Phishing techniques**. Each module comes with its own lab exercise, which is nice. This section teaches you how to weaponise MS Docs macros and VBA for initial access - classic stuff.
+
+From there, you move into creating **droppers in JScript and C#**, plus running PowerShell in memory. It gets properly technical when you hit the **process injection, process hollowing, and reflective DLL injection** modules. These are covered in great detail, which I appreciated. 
+
+The **AV evasion** section on Intel architecture and Windows 10 goes deep into AMSI, UAC, and similar defensive mechanisms. Following that, the **Application whitelisting** module covers niche but genuinely important topics like `Constrained Language Mode (CLM)` and `AppLocker`.
+
+Now, the `Kiosk Breakout` module felt a bit... random? It didn't have any relevant context from an examination perspective, but I reckon OffSec just wanted to give us a taste of breaking out of restricted environments to gain shell access. It's a 300-level cert, after all - they're clearly trying to expose you to a broader range of scenarios.
+
+There's also content on **MSSQL exploitation, lateral movement**, and a bit about **Active Directory Forest and Trust Exploitation**.
+
+## The Exam: Calmer Than expected
+
+![](./resources/going_in.png)
+
+Although initially nervous since this was my first Offsec exam, the exam itself was actually quite chill. I managed to grab the `secret.txt` file within the first eight hours. Couldn't complete the other path though.
+
+Obviously, I can't discuss specifics about what's on the exam (OffSec would have my head), but I'll say this: if you've completed all the challenge labs, you should breeze through the exam without major issues. Apparently they've added a **challenge-8** since I took mine, but I never got to try it, so can't tell you much about that.
+
+## My Advice: Beyond Just Passing
+
+- **Take proper breaks.** Your brain needs rest. Don't be a hero and burn yourself out in the first four hours.
+
+- **Keep your payloads ready.** I did it, and I've created a [GitHub repo](https://github.com/holywater2372/sliver-cheatsheet) with all the payloads and obfuscators I used throughout the course and exam. Having that arsenal pre-built saved me massive amounts of time. I did it with one other friend I made off of OffSec's Discord while going through the course/labs.
+
+- **Do extra reading.** This is crucial. The course teaches you how to pass the exam, sure. But if you're not actually *learning* the techniques and understanding how to apply them in different contexts, what's the point? You're just running tools like a script kiddie with a fancy certificate.
+
+## The Elephant in the Room: Is It Worth the Money?
+
+Is the OSEP course material good? Absolutely.
+
+Is it worth £1,400 of your own money? That's complicated....
+
+If your employer is paying for it, then definitely go for it. But if you're funding this yourself, you need to have a serious think about your goals and circumstances.
+
+## What's Missing in 2025?
+
+Here's my issue, the course doesn't cover loads of topics that you'll actually need in real-world engagements in 2025. Where's the `AD CS` exploitation? What about `SCCM`? These are essential attack vectors that you'll encounter regularly on modern infrastructure.
+
+
+The <span style="font-family: Courier New;">AV signatures are outdated</span> as well. I've heard from the Discord community that some date back to 2020. I get it - OffSec wants you to dip your toes in the water rather than throwing you straight into a sea of sharks. But still, it's 2025. Things have moved on.
+
+Additionally, some of the phishing content uses old-school techniques. Macros aren't even supported in `DOCX` files. Certain lateral movement techniques seem a bit out of place too, like they've only been included to make the exam more challenging rather than being genuinely relevant.
+
+I'm not saying it's a waste of time - it's definitely good to understand how orchestration tools work and all that. But realistically, when are you actually going to find an Ansible playbook just lying around on an engagement?
+
+## Final Thoughts
+
+Look, OSEP is a solid certification that teaches genuine skills. The course content is well-structured, the labs are decent, and you'll come out with practical knowledge of Windows evasion techniques.
+
+But it's not perfect. It needs updating to reflect modern attack vectors, and at £1,400 out of pocket, you need to carefully consider whether it's the right investment for <span style="color: red;">your</span> situation.
+
+Would I recommend it? Yes, with caveats. If someone else is paying, absolutely crack on. If you're self-funding, make sure you understand what you're getting - and more importantly, what you're *not* getting - for your money.

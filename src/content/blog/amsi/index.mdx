@@ -1,13 +1,19 @@
 ---
 title: 'AMSI'
 description: 'foo AMI'
-date: 2025-02-01
-tags: ['AMSI','tradecraft']
+date: 2025-11-15
+tags: ['AMSI','tradecraft',evasion]
 image: './resources/banner.jpg'
 authors: ['holywater']
 ---
 import Callout from '@/components/Callout.astro'
+import FirstSubpost from '@/components/FirstSubpost.astro'
 
-## Introduction
+# Introduction
+The Antimalware Scan Interface (AMSI) was first introduced by [Microsoft](https://learn.microsoft.com/en-us/windows/win32/amsi/antimalware-scan-interface-portal) in 2015, to improve the detection of malicious script before executing it. AMSI provides a runtime scanning interface that enables `AV` engines to inspect scripts, commands, and memory buffers before execution. 
 
+It is integrated into components like UAC, Office Macros, PowerShell, and Windows Script Host (`wscript.exe` and `cscript.exe`) 
 ![](./resources/amsi.png)
+
+
+<FirstSubpost title="bypass 1" href="/blog/amsi/bypass-1" />
