@@ -89,7 +89,7 @@
     }
 
     :where(code):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-      @apply bg-muted/50 text-foreground relative rounded-sm px-[0.3rem] py-[0.2rem] text-sm font-medium break-words;
+      @apply bg-muted/50 text-foreground relative border px-[0.3rem] py-[0.2rem] text-sm font-medium break-words;
       @apply [&>span[data-line='']>*]:text-(--shiki-light) dark:[&>span[data-line='']>*]:text-(--shiki-dark);
     }
 
@@ -130,6 +130,10 @@
       ) {
       @apply mx-auto my-6;
     }
+
+    :where(img):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+      @apply border-[1.2px];
+}
 
     :where(pre):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
       @apply max-h-[min(68vh,1000px)]! overflow-y-auto [&::-webkit-scrollbar-corner]:hidden;
