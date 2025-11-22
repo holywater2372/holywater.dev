@@ -26,7 +26,7 @@ const images = entries.map(([, url]) => url)
   }
 </div>
 
-<script define:vars={{ images }}>
+<script is:inline define:vars={{ images }}>
   // Pick random starting image on client side
   const randomIndex = Math.floor(Math.random() * images.length)
   let currentImage = images.length > 0 ? images[randomIndex] : ''
