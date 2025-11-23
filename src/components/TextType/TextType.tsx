@@ -21,6 +21,7 @@ interface TextTypeProps {
   variableSpeed?: { min: number; max: number };
   onSentenceComplete?: (sentence: ReactNode, index: number) => void;
   startOnVisible?: boolean;
+  dimmedOpacity?: number;
 }
 
 const TextType = ({
@@ -39,9 +40,10 @@ const TextType = ({
   variableSpeed,
   onSentenceComplete,
   startOnVisible = false,
+  dimmedOpacity = 0.3,
   ...props
 }: TextTypeProps & React.HTMLAttributes<HTMLElement>) => {
-  const [displayedText, setDisplayedText] = useState('');
+  const [typedLength, setTypedLength] = useState(0);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(!startOnVisible);
   const [finished, setFinished] = useState(false);
@@ -83,10 +85,8 @@ const TextType = ({
   useEffect(() => {
     if (showCursor && cursorRef.current) {
       if (finished) {
-        // Keep cursor visible and solid when typing is finished
         gsap.to(cursorRef.current, { opacity: 1, duration: 0 });
       } else {
-        // Start blinking animation when typing is in progress
         gsap.set(cursorRef.current, { opacity: 1 });
         gsap.to(cursorRef.current, {
           opacity: 0,
@@ -106,10 +106,10 @@ const TextType = ({
     const currentText = textArray[currentTextIndex];
 
     if (currentText && typeof currentText === 'string') {
-      if (displayedText.length < currentText.length) {
+      if (typedLength < currentText.length) {
         timeout = setTimeout(
           () => {
-            setDisplayedText(currentText.slice(0, displayedText.length + 1));
+            setTypedLength(typedLength + 1);
           },
           variableSpeed ? getRandomSpeed() : typingSpeed
         );
@@ -128,7 +128,7 @@ const TextType = ({
         timeout = setTimeout(() => {
           setCompletedText(prev => [...prev, currentText]);
           setCurrentTextIndex(nextIndex);
-          setDisplayedText('');
+          setTypedLength(0);
         }, pauseDuration);
       }
     } else {
@@ -146,13 +146,13 @@ const TextType = ({
       timeout = setTimeout(() => {
         setCompletedText(prev => [...prev, currentText]);
         setCurrentTextIndex(nextIndex);
-        setDisplayedText('');
+        setTypedLength(0);
       }, pauseDuration);
     }
     
     return () => clearTimeout(timeout);
   }, [
-    displayedText,
+    typedLength,
     typingSpeed,
     pauseDuration,
     textArray,
@@ -160,8 +160,34 @@ const TextType = ({
     isVisible,
     variableSpeed,
     onSentenceComplete,
-    finished
+    finished,
+    getRandomSpeed
   ]);
+
+  // Render the current text with opacity effect
+  const renderCurrentText = () => {
+    const currentText = textArray[currentTextIndex];
+    
+    if (typeof currentText === 'string') {
+      return (
+        <span className="text-type__content" style={{ color: getCurrentTextColor() }}>
+          {currentText.split('').map((char, index) => (
+            <span
+              key={index}
+              style={{
+                opacity: index < typedLength ? 1 : dimmedOpacity,
+                transition: 'opacity 0.1s ease'
+              }}
+            >
+              {char}
+            </span>
+          ))}
+        </span>
+      );
+    }
+    
+    return currentText;
+  };
 
   return createElement(
     Component,
@@ -170,23 +196,24 @@ const TextType = ({
       className: `text-type ${className}`,
       ...props
     },
-    completedText.map((line, index) => (
-      <React.Fragment key={index}>
-        {line}
-        <br />
-      </React.Fragment>
-    )),
-    <span className="text-type__content" style={{ color: getCurrentTextColor() }}>
-      {displayedText}
-    </span>,
-    showCursor && (
-      <span
-        ref={cursorRef}
-        className={`text-type__cursor ${cursorClassName}`}
-      >
-        {cursorCharacter}
-      </span>
-    )
+    <>
+      {completedText.map((line, index) => (
+        <React.Fragment key={index}>
+          {line}
+          <br />
+        </React.Fragment>
+      ))}
+      {renderCurrentText()}
+      {/* Single cursor element that always renders at the end */}
+      {showCursor && (
+        <span
+          ref={cursorRef}
+          className={`text-type__cursor ${cursorClassName}`}
+        >
+          {cursorCharacter}
+        </span>
+      )}
+    </>
   );
 };
 
