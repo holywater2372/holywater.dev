@@ -1,6 +1,6 @@
 ---
 title: 'Reversing and Bypassing - AMSI'
-description: 'I break down my process of reverse‑engineering AMSI.dll and studying the memory‑patching method.'
+description: 'Reverse‑engineering AMSI and implementing a memory‑patch.'
 date: 2025-11-15
 tags: ['AMSI','tradecraft',evasion]
 image: './resources/banner.jpg'
@@ -26,10 +26,13 @@ But with the introduction of PowerShell, the cat and mouse game got complicated 
 So C2 frameworks like PowerShell Empire happily exploited this and loaded PowerShell or `.ps1` scripts into memory. This was the point when AMSI was introduced. AMSI is basically a scanning middleman <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-person-standing-icon lucide-person-standing" style="display: inline-block; vertical-align: middle;"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg> i.e. when PowerShell or any scripting engine wants to check if something is malicious, it calls AMSI functions like `AmsiScanBuffer(){:js}` or `AmsiScanString(){:js}`, passing the script content. AMSI then forwards this to whatever antivirus product is registered on the system (Windows Defender, Kaspersky, etc.).
 
 Then attackers realized they could bypass this using C#. They could load compiled C# assembly bytes directly into memory using `Assembly.Load(){:js}`. These assemblies are pre-compiled to [Common Intermediate Language](https://www.codeproject.com/articles/Understanding-Common-Intermediate-Language-CIL#comments-section), and when executed, the [CLR](https://learn.microsoft.com/en-us/dotnet/standard/clr)'s [JIT](https://kipp.ly/jits-intro/) compiler converts them to native machine code on-the-fly in memory, completely bypassing AMSI's script scanning since AMSI back then didn't hook into the CLR.
-![Figure 1](./resources/csharp.jpg)
+| ![Figure 1](./resources/csharp.jpg) |
+|:--:|
+| *Image from GFG on "How C# gets compiled" [^1]* |
 
+[^1]: [How C# Code Gets Compiled and Executed?](https://www.geeksforgeeks.org/c-sharp/how-c-sharp-code-gets-compiled-and-executed/)
 
-# What is AMSI?????? 
+## What is AMSI ??? 
 The Antimalware Scan Interface (AMSI) was first introduced by [Microsoft](https://learn.microsoft.com/en-us/windows/win32/amsi/antimalware-scan-interface-portal) in 2015, to improve the detection of malicious script before executing it. As mentioned earlier, AMSI acts as an intermediary/middleman that submits scripts, commands, and memory buffers to registered AV engines for inspection prior to execution.  The AV engine returns a scan result (e.g., **AMSI_RESULT_CLEAN**, **AMSI_RESULT_DETECTED**), and AMSI enforces the decision by either allowing execution or blocking it and returning an error to the calling application.
 
 It is integrated into components like UAC, Office Macros, PowerShell, and Windows Script Host (`wscript.exe` and `cscript.exe`) 

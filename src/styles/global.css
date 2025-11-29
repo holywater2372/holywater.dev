@@ -102,6 +102,12 @@
     overflow: hidden;
   }
 
+  /* Add rounded corners to blog images */
+  article img,
+  .prose img {
+    border-radius: 0.5rem;
+  }
+
   body {
     background: linear-gradient(to bottom, oklch(75.316% 0.10776 228.668 / 0.66) 0%, oklch(0.9082 0.0338 225.47) 30%);
     background-attachment: fixed;

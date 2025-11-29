@@ -19,11 +19,11 @@ There are four core functions that are used...
  ### AmsiInitialize
  When PowerShell is launched, it loads `amsi.dll` and calls `AmsiInitialize(){:js}`. Thus, `AmsiInitialize(){:js}` is called even before you Invoke any command and hence it can't be manipulated. There are two inputs to this function, one is the name of application (for example, powershell) and another one is amsicontext structure which is used by the subsequent calls.
 
- ```c++
+ ```cpp
  HRESULT AmsiInitialize(
   [in]  LPCWSTR      appName,
   [out] HAMSICONTEXT *a
-
+ );
  ```
 
 
