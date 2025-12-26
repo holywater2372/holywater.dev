@@ -19,15 +19,15 @@
     "@astrojs/react": "^4.4.2",
     "@astrojs/rss": "^4.0.14",
     "@astrojs/sitemap": "^3.6.0",
-    "@expressive-code/plugin-collapsible-sections": "^0.40.2",
-    "@expressive-code/plugin-line-numbers": "^0.40.2",
+    "@expressive-code/plugin-collapsible-sections": "^0.41.5",
+    "@expressive-code/plugin-line-numbers": "^0.41.5",
     "@iconify-json/lucide": "^1.2.26",
     "@iconify-json/simple-icons": "^1.2.49",
     "@tailwindcss/vite": "^4.0.7",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "astro": "^5.16.0",
-    "astro-expressive-code": "^0.40.2",
+    "astro-expressive-code": "^0.41.5",
     "astro-icon": "^1.1.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -53,7 +53,7 @@
     "prettier": "^3.5.1",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-astro-organize-imports": "^0.4.11",
-    "prettier-plugin-tailwindcss": "^0.6.11"
+    "prettier-plugin-tailwindcss": "^0.7.2"
   },
   "prettier": {
     "semi": false,
